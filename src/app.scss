@@ -1,0 +1,176 @@
+$primary-color: #5dbea3;
+$cancel-color: #dd7973;
+$border-color: rgb(252, 248, 248);
+$font-size: 16px;
+
+@mixin button-styles($radius, $color) {
+  background-color: $color;
+  font-weight: bold;
+  color: white;
+  padding: 10px 20px;
+  margin: 5px 3px 5px 0px;
+  border: 2px solid $border-color;
+  border-radius: $radius;
+}
+
+@mixin input-style() {
+  padding: 10px 10px;
+  height: 40px;
+  margin-right: 5px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: "Noto Sans JP", sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  color: rgb(130, 128, 128);
+}
+
+.header {
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+
+  .button {
+    background-color: #5dbea3;
+    font-weight: bold;
+    color: white;
+    padding: 10px 20px;
+    margin: 5px 3px 5px 0px;
+    border: 2px solid rgb(252, 248, 248);
+    border-radius: 5px;
+  }
+  .button__danger {
+    background-color: #dd7973;
+  }
+  .input {
+    padding: 10px 10px;
+    height: 40px;
+    margin-right: 5px;
+    width: 50%;
+    border: 1px solid #ccc;
+    box-shadow: 0 1px 8px rgba(228, 227, 227, 0.25);
+    border-radius: 5px;
+  }
+}
+
+.body {
+  margin: 20px;
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-start;
+  .todo-board {
+    flex-grow: 1;
+    margin-right: 20px;
+    height: 550px;
+    width: 500px;
+    overflow-y: scroll;
+    background-color: #ede9e9;
+    border-radius: 10px;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+    .todo-card {
+      background-color: rgb(252, 248, 248);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      border: 2px solid rgb(252, 248, 248);
+      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+      border-radius: 5px;
+      margin: 10px;
+      padding: 0 10px;
+      height: 100px;
+      .todo-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        .success-button {
+          @include button-styles(4px, $primary-color);
+          font-weight: normal;
+          padding: 4px;
+          margin: 0px;
+        }
+        .danger-button {
+          @include button-styles(4px, $cancel-color);
+          font-weight: normal;
+          padding: 4px;
+          margin: 0px;
+        }
+      }
+      .todo-footer {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+      }
+      .todo-date {
+        margin-top: 3px;
+        color: rgb(148, 146, 146);
+      }
+      .todo-content {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        padding: 3px 20px;
+      }
+    }
+  }
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fbf3f3;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  padding: 10px;
+  width: 40%;
+  height: 40%;
+  min-height: 250px;
+  z-index: 2;
+  .modal__content {
+    max-height: 100%;
+
+    .ck-content {
+      width: 100%;
+      height: 240px;
+    }
+  }
+  .button {
+    background-color: #5dbea3;
+    font-weight: bold;
+    color: white;
+    padding: 10px 20px;
+    margin: 5px 3px 5px 0px;
+    border: 2px solid rgb(252, 248, 248);
+    border-radius: 5px;
+  }
+  .button__danger {
+    background-color: #dd7973;
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  z-index: 1;
+}
+
+.hidden {
+  display: none;
+}
