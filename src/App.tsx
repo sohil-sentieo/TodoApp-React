@@ -13,14 +13,102 @@ import {
 } from "./util";
 
 function App() {
+  const [searchText, setSearchText] = React.useState("");
+
   const [pendingTodos, setPendingTodos] = React.useState(
     getFilteredTodoType("pending")
   );
+  const pendingScrollRef: React.RefObject<HTMLDivElement> = React.useRef();
+  const [pendingBoardCurrPage, setPendingBoardCurrPage] = React.useState(1);
+  const [pendingBoardPrevPage, setPendingBoardPrevPage] = React.useState(0);
+
+  React.useEffect(() => {
+    const fetchData: () => Todo[] = () => {
+      const todos: Todo[] = getFilteredTodoType(
+        "pending",
+        searchText,
+        pendingBoardCurrPage
+      );
+      setPendingBoardPrevPage(pendingBoardCurrPage);
+      return todos;
+    };
+    if (pendingBoardCurrPage != pendingBoardPrevPage) {
+      const todos: Todo[] = fetchData();
+      setPendingTodos(todos);
+    }
+  }, [pendingBoardCurrPage, pendingBoardPrevPage, searchText]);
+
+  const pendingBoardOnScroll = () => {
+    if (pendingScrollRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } =
+        pendingScrollRef.current;
+      if (Math.round(scrollTop + clientHeight) >= Math.round(scrollHeight)) {
+        console.log(Math.round(scrollHeight), scrollTop + clientHeight);
+        setPendingBoardCurrPage(pendingBoardCurrPage + 1);
+      }
+    }
+  };
 
   const [pinnedTodos, setPinnedTodos] = React.useState(
     getFilteredTodoType("pinned")
   );
+  const pinnedScrollRef: React.RefObject<HTMLDivElement> = React.useRef();
+  const [pinnedBoardCurrPage, setPinnedBoardCurrPage] = React.useState(1);
+  const [pinnedBoardPrevPage, setPinnedBoardPrevPage] = React.useState(0);
+
+  React.useEffect(() => {
+    const fetchData: () => Todo[] = () => {
+      const todos: Todo[] = getFilteredTodoType(
+        "pinned",
+        searchText,
+        pinnedBoardCurrPage
+      );
+      setPinnedBoardPrevPage(pinnedBoardCurrPage);
+      return todos;
+    };
+    if (pinnedBoardCurrPage != pinnedBoardPrevPage) {
+      const todos: Todo[] = fetchData();
+      setPinnedTodos(todos);
+    }
+  }, [pinnedBoardCurrPage, pinnedBoardPrevPage, searchText]);
+
+  const pinnedBoardOnScroll = () => {
+    if (pinnedScrollRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = pinnedScrollRef.current;
+      if (Math.round(scrollTop + clientHeight) >= Math.round(scrollHeight)) {
+        setPinnedBoardCurrPage(pinnedBoardCurrPage + 1);
+      }
+    }
+  };
   const [doneTodos, setDoneTodos] = React.useState(getFilteredTodoType("done"));
+  const doneScrollRef: React.RefObject<HTMLDivElement> = React.useRef();
+  const [doneBoardCurrPage, setDoneBoardCurrPage] = React.useState(1);
+  const [doneBoardPrevPage, setDoneBoardPrevPage] = React.useState(0);
+
+  React.useEffect(() => {
+    const fetchData: () => Todo[] = () => {
+      const todos: Todo[] = getFilteredTodoType(
+        "done",
+        searchText,
+        doneBoardCurrPage
+      );
+      setDoneBoardPrevPage(doneBoardCurrPage);
+      return todos;
+    };
+    if (doneBoardCurrPage != doneBoardPrevPage) {
+      const todos: Todo[] = fetchData();
+      setDoneTodos(todos);
+    }
+  }, [doneBoardCurrPage, doneBoardPrevPage, searchText]);
+
+  const doneBoardOnScroll = () => {
+    if (doneScrollRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = doneScrollRef.current;
+      if (Math.round(scrollTop + clientHeight) >= Math.round(scrollHeight)) {
+        setDoneBoardCurrPage(doneBoardCurrPage + 1);
+      }
+    }
+  };
 
   const [editTodo, setEditTodo] = React.useState<Todo | null>(null);
 
@@ -47,7 +135,7 @@ function App() {
     const currTodos: Todos = getTodosFromLocal();
     currTodos[newTodo.id] = newTodo;
     saveTodosToLocal(currTodos);
-    setPendingTodos([...pendingTodos, newTodo]);
+    setPendingTodos(getFilteredTodoType("pending"));
   };
 
   const onChangeTodoCheckHandler: (todo: Todo) => void = (todo) => {
@@ -77,6 +165,7 @@ function App() {
   };
 
   const todoSearchHandler: (searchText: string) => void = (searchText) => {
+    setSearchText(searchText);
     setPendingTodos(getFilteredTodoType("pending", searchText));
     setDoneTodos(getFilteredTodoType("done", searchText));
     setPinnedTodos(getFilteredTodoType("pinned", searchText));
@@ -121,6 +210,8 @@ function App() {
           onClickTodoPinHandler={onClickTodoPinHandler}
           onClickTodoDeleteHandler={onClickTodoDeleteHandler}
           onClickTodoEditHandler={onClickTodoEditHandler}
+          scrollRef={pendingScrollRef}
+          onScroll={pendingBoardOnScroll}
         />
         <TodoBoard
           todos={pinnedTodos}
@@ -129,6 +220,8 @@ function App() {
           onClickTodoPinHandler={onClickTodoPinHandler}
           onClickTodoDeleteHandler={onClickTodoDeleteHandler}
           onClickTodoEditHandler={onClickTodoEditHandler}
+          scrollRef={pinnedScrollRef}
+          onScroll={pinnedBoardOnScroll}
         />
         <TodoBoard
           todos={doneTodos}
@@ -137,6 +230,8 @@ function App() {
           onClickTodoPinHandler={onClickTodoPinHandler}
           onClickTodoDeleteHandler={onClickTodoDeleteHandler}
           onClickTodoEditHandler={onClickTodoEditHandler}
+          scrollRef={doneScrollRef}
+          onScroll={doneBoardOnScroll}
         />
       </main>
       {editTodo !== null ? (

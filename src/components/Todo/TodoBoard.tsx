@@ -1,5 +1,5 @@
 import TodoCard from "./TodoCard";
-import { Todo, getFilteredTodoType, todoStatus } from "../../util";
+import { Todo, todoStatus } from "../../util";
 import React from "react";
 
 export default function TodoBoard({
@@ -9,6 +9,8 @@ export default function TodoBoard({
   onClickTodoPinHandler,
   onClickTodoDeleteHandler,
   onClickTodoEditHandler,
+  onScroll,
+  scrollRef,
 }: {
   todos: Todo[];
   todoType: todoStatus;
@@ -16,20 +18,10 @@ export default function TodoBoard({
   onClickTodoPinHandler: (todo: Todo) => void;
   onClickTodoDeleteHandler: (todoId: number) => void;
   onClickTodoEditHandler: (todoId: number) => void;
+  onScroll: () => void;
+  scrollRef: React.RefObject<HTMLDivElement>;
 }) {
   const header: string = `${todoType} Items`;
-  const scrollRef: React.RefObject<HTMLDivElement> = React.useRef();
-
-  const [currPage, setCurrPage] = React.useState(1);
-
-  const onScroll = () => {
-    if (scrollRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
-      if (scrollTop + clientHeight === scrollHeight) {
-        setCurrPage(currPage + 1);
-      }
-    }
-  };
 
   return (
     <>

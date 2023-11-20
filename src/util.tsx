@@ -38,7 +38,7 @@ export const getFilteredTodoType: (
         value.text.toLowerCase().includes(searchText.toLowerCase())
     )
     .map(([, value]) => value)
-    .slice((pageNum - 1) * pageSize, pageNum * pageSize);
+    .slice(0, pageNum * pageSize);
 };
 
 export const formatDateToCustomFormat: (date: Date) => string = (date) => {
