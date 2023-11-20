@@ -18,7 +18,7 @@ function App() {
   const [pendingTodos, setPendingTodos] = React.useState(
     getFilteredTodoType("pending")
   );
-  const pendingScrollRef: React.RefObject<HTMLDivElement> = React.useRef();
+  const pendingScrollRef: React.RefObject<HTMLDivElement> = React.useRef(null);
   const [pendingBoardCurrPage, setPendingBoardCurrPage] = React.useState(1);
   const [pendingBoardPrevPage, setPendingBoardPrevPage] = React.useState(0);
 
@@ -52,7 +52,7 @@ function App() {
   const [pinnedTodos, setPinnedTodos] = React.useState(
     getFilteredTodoType("pinned")
   );
-  const pinnedScrollRef: React.RefObject<HTMLDivElement> = React.useRef();
+  const pinnedScrollRef: React.RefObject<HTMLDivElement> = React.useRef(null);
   const [pinnedBoardCurrPage, setPinnedBoardCurrPage] = React.useState(1);
   const [pinnedBoardPrevPage, setPinnedBoardPrevPage] = React.useState(0);
 
@@ -81,7 +81,7 @@ function App() {
     }
   };
   const [doneTodos, setDoneTodos] = React.useState(getFilteredTodoType("done"));
-  const doneScrollRef: React.RefObject<HTMLDivElement> = React.useRef();
+  const doneScrollRef: React.RefObject<HTMLDivElement> = React.useRef(null);
   const [doneBoardCurrPage, setDoneBoardCurrPage] = React.useState(1);
   const [doneBoardPrevPage, setDoneBoardPrevPage] = React.useState(0);
 
