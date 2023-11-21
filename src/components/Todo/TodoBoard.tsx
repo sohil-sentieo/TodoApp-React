@@ -21,7 +21,9 @@ export default function TodoBoard({
   onScroll: () => void;
   scrollRef: React.RefObject<HTMLDivElement>;
 }) {
-  const header: string = `${todoType} Items`;
+  const header: string = `${
+    todoType.charAt(0).toUpperCase() + todoType.slice(1)
+  } Items`;
 
   return (
     <>

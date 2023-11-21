@@ -75,6 +75,10 @@ h3 {
     background-color: #ede9e9;
     border-radius: 10px;
     box-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+
+    h3 {
+      text-align: center;
+    }
     .todo-card {
       background-color: rgb(252, 248, 248);
       display: flex;
