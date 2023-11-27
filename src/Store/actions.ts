@@ -12,3 +12,14 @@ export const editingTodo: (todo: Todo | null) => actions.EditingTodoAction = (
     },
   };
 };
+
+export const searchTodos: (searchText: string) => actions.SearchTodoAction = (
+  searchText
+) => {
+  return {
+    type: actions.TEXT_SEARCH,
+    payload: {
+      searchText: searchText,
+    },
+  };
+};

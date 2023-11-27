@@ -5,7 +5,7 @@ import "./app.scss";
 import Controller from "./components/Controller";
 import TodoBoard from "./components/Todo/TodoBoard";
 import EditModal from "./components/EditModal";
-import { store } from "./Store/store";
+import { store, TodoStore } from "./Store/store";
 import {
   Todo,
   Todos,
@@ -16,7 +16,8 @@ import {
 import { editingTodo } from "./Store/actions";
 
 function App() {
-  const [searchText, setSearchText] = React.useState("");
+  const editTodo = useSelector((state: TodoStore) => state.editingTodo);
+  const searchText = useSelector((state: TodoStore) => state.searchText);
 
   const [pendingTodos, setPendingTodos] = React.useState(
     getFilteredTodoType("pending")
@@ -112,21 +113,17 @@ function App() {
     }
   };
 
-  const editTodo = useSelector((state) => state.editingTodo);
-
   const saveEditOnClickTodoHandler: (todo: Todo) => void = (todo) => {
     const newTodos = getTodosFromLocal();
     newTodos[todo.id] = todo;
     saveTodosToLocal(newTodos);
-    setPendingTodos(getFilteredTodoType("pending"));
-    setPinnedTodos(getFilteredTodoType("pinned"));
+    setPendingTodos(getFilteredTodoType("pending", searchText));
+    setPinnedTodos(getFilteredTodoType("pinned", searchText));
 
-    // setEditTodo(null);
     store.dispatch(editingTodo(null));
   };
 
   const cancelEditOnClickTodoHandler = () => {
-    // setEditTodo(null);
     store.dispatch(editingTodo(null));
   };
 
@@ -134,43 +131,44 @@ function App() {
     const currTodos: Todos = getTodosFromLocal();
     currTodos[newTodo.id] = newTodo;
     saveTodosToLocal(currTodos);
-    setPendingTodos(getFilteredTodoType("pending"));
+    setPendingTodos(getFilteredTodoType("pending", searchText));
   };
 
   const onChangeTodoCheckHandler: (todo: Todo) => void = (todo) => {
     const currTodos: Todos = getTodosFromLocal();
     currTodos[todo.id] = todo;
     saveTodosToLocal(currTodos);
-    setPendingTodos(getFilteredTodoType("pending"));
-    setDoneTodos(getFilteredTodoType("done"));
-    setPinnedTodos(getFilteredTodoType("pinned"));
+    setPendingTodos(getFilteredTodoType("pending", searchText));
+    setDoneTodos(getFilteredTodoType("done", searchText));
+    setPinnedTodos(getFilteredTodoType("pinned", searchText));
   };
 
   const onClickTodoPinHandler: (todo: Todo) => void = (todo) => {
     const currTodos: Todos = getTodosFromLocal();
     currTodos[todo.id] = todo;
     saveTodosToLocal(currTodos);
-    setPendingTodos(getFilteredTodoType("pending"));
-    setPinnedTodos(getFilteredTodoType("pinned"));
+    setPendingTodos(getFilteredTodoType("pending", searchText));
+    setPinnedTodos(getFilteredTodoType("pinned", searchText));
   };
 
   const onClickTodoDeleteHandler: (todoId: number) => void = (todoId) => {
     const currTodos: Todos = getTodosFromLocal();
     delete currTodos[todoId];
     saveTodosToLocal(currTodos);
-    setPendingTodos(getFilteredTodoType("pending"));
-    setDoneTodos(getFilteredTodoType("done"));
-    setPinnedTodos(getFilteredTodoType("pinned"));
-  };
-
-  const todoSearchHandler: (searchText: string) => void = (searchText) => {
-    setSearchText(searchText);
     setPendingTodos(getFilteredTodoType("pending", searchText));
     setDoneTodos(getFilteredTodoType("done", searchText));
     setPinnedTodos(getFilteredTodoType("pinned", searchText));
   };
 
+  React.useEffect(() => {
+    console.log("effect", searchText);
+    setPendingTodos(getFilteredTodoType("pending", searchText));
+    setDoneTodos(getFilteredTodoType("done", searchText));
+    setPinnedTodos(getFilteredTodoType("pinned", searchText));
+  }, [searchText]);
+
   const markAllDoneTodoHandler = () => {
+    // Mark done only viewable todos. Not all...
     const currTodos: Todos = getTodosFromLocal();
     const newTodos = Object.entries(currTodos).reduce(
       (accumulated: Todos, [key, value]: [string, Todo]) => {
@@ -181,23 +179,22 @@ function App() {
       {}
     );
     saveTodosToLocal(newTodos);
-    setPendingTodos(getFilteredTodoType("pending"));
-    setDoneTodos(getFilteredTodoType("done"));
-    setPinnedTodos(getFilteredTodoType("pinned"));
+    setPendingTodos(getFilteredTodoType("pending", searchText));
+    setDoneTodos(getFilteredTodoType("done", searchText));
+    setPinnedTodos(getFilteredTodoType("pinned", searchText));
   };
 
   const clearTodosHandler = () => {
     sessionStorage.removeItem("todos");
-    setPendingTodos(getFilteredTodoType("pending"));
-    setDoneTodos(getFilteredTodoType("done"));
-    setPinnedTodos(getFilteredTodoType("pinned"));
+    setPendingTodos(getFilteredTodoType("pending", searchText));
+    setDoneTodos(getFilteredTodoType("done", searchText));
+    setPinnedTodos(getFilteredTodoType("pinned", searchText));
   };
 
   return (
     <>
       <Controller
         onSubmitTodosHandler={onSubmitTodosHandler}
-        todoSearchHandler={todoSearchHandler}
         markAllDoneTodoHandler={markAllDoneTodoHandler}
         clearTodosHandler={clearTodosHandler}
       />

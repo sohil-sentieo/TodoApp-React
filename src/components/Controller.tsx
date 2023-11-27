@@ -1,15 +1,15 @@
 import React from "react";
 
 import { Todo } from "../util";
+import { store } from "../Store/store";
+import { searchTodos } from "../Store/actions";
 
 export default function Controller({
   onSubmitTodosHandler,
-  todoSearchHandler,
   markAllDoneTodoHandler,
   clearTodosHandler,
 }: {
   onSubmitTodosHandler: (newTodos: Todo) => void;
-  todoSearchHandler: (searchText: string) => void;
   markAllDoneTodoHandler: () => void;
   clearTodosHandler: () => void;
 }) {
@@ -28,12 +28,12 @@ export default function Controller({
 
   const onSubmitSearchHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    todoSearchHandler(searchText);
+    store.dispatch(searchTodos(searchText));
   };
 
   const onClickResetSearchHandler = () => {
     setSearchText("");
-    todoSearchHandler("");
+    store.dispatch(searchTodos(""));
   };
 
   const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
