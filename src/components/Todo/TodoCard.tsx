@@ -9,14 +9,12 @@ export default function TodoCard({
   onChangeTodoCheckHandler,
   onClickTodoPinHandler,
   onClickTodoDeleteHandler,
-  onClickTodoEditHandler,
 }: {
   todo: Todo;
   todoLabel: number;
   onChangeTodoCheckHandler: (todo: Todo) => void;
   onClickTodoPinHandler: (todo: Todo) => void;
   onClickTodoDeleteHandler: (todoId: number) => void;
-  onClickTodoEditHandler: (todoId: number) => void;
 }) {
   return (
     <div className="todo-card">
@@ -26,7 +24,6 @@ export default function TodoCard({
         onChangeTodoCheckHandler={onChangeTodoCheckHandler}
         onClickTodoPinHandler={onClickTodoPinHandler}
         onClickTodoDeleteHandler={onClickTodoDeleteHandler}
-        onClickTodoEditHandler={onClickTodoEditHandler}
       />
       <TodoBody text={todo.text} />
       <TodoFooter date={todo.createdAt} />

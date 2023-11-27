@@ -1,9 +1,11 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 import "./app.scss";
 import Controller from "./components/Controller";
 import TodoBoard from "./components/Todo/TodoBoard";
 import EditModal from "./components/EditModal";
+import { store } from "./Store/store";
 import {
   Todo,
   Todos,
@@ -11,6 +13,7 @@ import {
   getFilteredTodoType,
   saveTodosToLocal,
 } from "./util";
+import { editingTodo } from "./Store/actions";
 
 function App() {
   const [searchText, setSearchText] = React.useState("");
@@ -43,7 +46,6 @@ function App() {
       const { scrollTop, scrollHeight, clientHeight } =
         pendingScrollRef.current;
       if (Math.round(scrollTop + clientHeight) >= Math.round(scrollHeight)) {
-        console.log(Math.round(scrollHeight), scrollTop + clientHeight);
         setPendingBoardCurrPage(pendingBoardCurrPage + 1);
       }
     }
@@ -110,12 +112,7 @@ function App() {
     }
   };
 
-  const [editTodo, setEditTodo] = React.useState<Todo | null>(null);
-
-  const onClickTodoEditHandler: (todoId: number) => void = (todoId) => {
-    const todo = getTodosFromLocal()[todoId];
-    setEditTodo(todo);
-  };
+  const editTodo = useSelector((state) => state.editingTodo);
 
   const saveEditOnClickTodoHandler: (todo: Todo) => void = (todo) => {
     const newTodos = getTodosFromLocal();
@@ -124,11 +121,13 @@ function App() {
     setPendingTodos(getFilteredTodoType("pending"));
     setPinnedTodos(getFilteredTodoType("pinned"));
 
-    setEditTodo(null);
+    // setEditTodo(null);
+    store.dispatch(editingTodo(null));
   };
 
   const cancelEditOnClickTodoHandler = () => {
-    setEditTodo(null);
+    // setEditTodo(null);
+    store.dispatch(editingTodo(null));
   };
 
   const onSubmitTodosHandler: (newTodo: Todo) => void = (newTodo: Todo) => {
@@ -209,7 +208,6 @@ function App() {
           onChangeTodoCheckHandler={onChangeTodoCheckHandler}
           onClickTodoPinHandler={onClickTodoPinHandler}
           onClickTodoDeleteHandler={onClickTodoDeleteHandler}
-          onClickTodoEditHandler={onClickTodoEditHandler}
           scrollRef={pendingScrollRef}
           onScroll={pendingBoardOnScroll}
         />
@@ -219,7 +217,6 @@ function App() {
           onChangeTodoCheckHandler={onChangeTodoCheckHandler}
           onClickTodoPinHandler={onClickTodoPinHandler}
           onClickTodoDeleteHandler={onClickTodoDeleteHandler}
-          onClickTodoEditHandler={onClickTodoEditHandler}
           scrollRef={pinnedScrollRef}
           onScroll={pinnedBoardOnScroll}
         />
@@ -229,12 +226,11 @@ function App() {
           onChangeTodoCheckHandler={onChangeTodoCheckHandler}
           onClickTodoPinHandler={onClickTodoPinHandler}
           onClickTodoDeleteHandler={onClickTodoDeleteHandler}
-          onClickTodoEditHandler={onClickTodoEditHandler}
           scrollRef={doneScrollRef}
           onScroll={doneBoardOnScroll}
         />
       </main>
-      {editTodo !== null ? (
+      {editTodo !== null && editTodo !== undefined ? (
         <EditModal
           todo={editTodo}
           saveOnClickHandler={saveEditOnClickTodoHandler}

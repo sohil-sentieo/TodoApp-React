@@ -8,7 +8,6 @@ export default function TodoBoard({
   onChangeTodoCheckHandler,
   onClickTodoPinHandler,
   onClickTodoDeleteHandler,
-  onClickTodoEditHandler,
   onScroll,
   scrollRef,
 }: {
@@ -17,7 +16,6 @@ export default function TodoBoard({
   onChangeTodoCheckHandler: (todo: Todo) => void;
   onClickTodoPinHandler: (todo: Todo) => void;
   onClickTodoDeleteHandler: (todoId: number) => void;
-  onClickTodoEditHandler: (todoId: number) => void;
   onScroll: () => void;
   scrollRef: React.RefObject<HTMLDivElement>;
 }) {
@@ -37,7 +35,6 @@ export default function TodoBoard({
             onChangeTodoCheckHandler={onChangeTodoCheckHandler}
             onClickTodoPinHandler={onClickTodoPinHandler}
             onClickTodoDeleteHandler={onClickTodoDeleteHandler}
-            onClickTodoEditHandler={onClickTodoEditHandler}
           />
         ))}
       </div>

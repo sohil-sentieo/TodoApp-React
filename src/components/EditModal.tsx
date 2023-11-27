@@ -20,17 +20,13 @@ export default function EditModal({
     saveOnClickHandler(todo);
   };
 
-  const inputOnChangeHandler = (event, editor) => {
-    setInputText(editor.getData());
-  };
-
   return (
     <>
       <div className="modal">
         <div className="modal__content">
           <CKEditor
             editor={ClassicEditor}
-            onChange={inputOnChangeHandler}
+            onChange={(_event, editor) => setInputText(editor.getData())}
             data={todo.text}
           />
         </div>

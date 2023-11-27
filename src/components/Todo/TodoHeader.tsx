@@ -1,4 +1,7 @@
 import React from "react";
+
+import { store } from "../../Store/store";
+import { editingTodo } from "../../Store/actions";
 import { Todo } from "../../util";
 
 export default function TodoHeader({
@@ -7,14 +10,12 @@ export default function TodoHeader({
   onChangeTodoCheckHandler,
   onClickTodoPinHandler,
   onClickTodoDeleteHandler,
-  onClickTodoEditHandler,
 }: {
   todo: Todo;
   todoLabel: number;
   onChangeTodoCheckHandler: (todo: Todo) => void;
   onClickTodoPinHandler: (todo: Todo) => void;
   onClickTodoDeleteHandler: (todoId: number) => void;
-  onClickTodoEditHandler: (todoId: number) => void;
 }) {
   const status = todo.status;
   const oncheckHandler: (event: React.ChangeEvent<HTMLInputElement>) => void = (
@@ -35,7 +36,7 @@ export default function TodoHeader({
   };
 
   const editOnClickHandler = () => {
-    onClickTodoEditHandler(Number(todo.id));
+    store.dispatch(editingTodo(todo));
   };
 
   return (
